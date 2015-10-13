@@ -10,29 +10,55 @@ var {
   StyleSheet,
   Text,
   View,
+  ActivityIndicatorIOS
 } = React;
 
 var Login = require('./login');
+var AuthService = require('./auth_service');
 
 var GithubBrowser = React.createClass({
+  componentDidMount: function() {
+      AuthService.getAuthInfo((err, authInfo)=> {
+        this.setState({
+          checkingAuth: false,
+          isLoggedIn: authInfo != null
+        });
+      })
+  },
   render: function() {
-    var message = "Holla There!"
-    return (
-        <Login />
-      // <View style={styles.container}>
-      //   <Text style={styles.welcome}>
-      //     {message}
-      //   </Text>
-      //   <Text style={styles.instructions}>
-      //     To get started, edit index.ios.js
-      //   </Text>
-      //   <Text style={styles.instructions}>
-      //     Press Cmd+R to reload,{'\n'}
-      //     Cmd+D or shake for dev menu
-      //   </Text>
-      // </View>
-    );
-  }
+    if(this.state.checkingAuth) {
+      return (
+          <View style={styles.container}>
+            <ActivityIndicatorIOS
+              animating={true}
+              style={styles.loader}
+              size={'large'} />
+          </View>
+        );
+    }
+
+    if(this.state.isLoggedIn) {
+      return (
+          <View style={styles.container}>
+            <Text style={styles.welcome}>Logged In</Text>
+          </View>
+        );
+    } else {
+      return (
+        <Login onLogin={this.onLogin} />
+      );
+    }
+    
+  },
+  onLogin: function() {
+    this.setState({isLoggedIn: true});
+  }, 
+  getInitialState() {
+      return {
+          isLoggedIn: false,
+          checkingAuth: true
+      };
+  },
 });
 
 var styles = StyleSheet.create({

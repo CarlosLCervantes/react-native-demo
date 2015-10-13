@@ -67,40 +67,18 @@ class Login extends Component {
 	onLoginPressed() {
 		console.log("Someone is loggin in with username " + this.state.username + " and password " + this.state.password)
 		this.setState({showProgress: true});
+		var authService = require('./auth_service');
+		authService.login({
+			username: this.state.username,
+			password: this.state.password
+		}, 
+		(results)=> {
+			this.setState(results);
 
-		var b = new buffer.Buffer(this.state.username + ':' + this.state.password);
-		var encodedAuth = b.toString('base64');
-		console.log(encodedAuth);
-
-		fetch('https://api.github.com/user', {
-			headers : {
-				'Authorization' : 'Basic ' + encodedAuth
+			if(results.success && this.props.onLogin) {
+				this.props.onLogin();
 			}
-		})
-		.then((response) => {
-			if(response.status >= 200 && response.status < 300) {
-				return response;
-			}
-
-			throw {
-				badCredentials: response.status == 401,
-				unknownError: response.status != 401
-			}
-		})
-		.then((response) => {
-			return response.json();
-		})
-		.then((result) => {
-			console.log(result);
-			this.setState({success: true})
-		})
-		.catch((err) => {
-			console.log("Login failed" + err);
-			this.setState(err);
-		})
-		.finally(() => {
-			this.setState({showProgress: false});
-		})
+		});
 	}
 }
 
