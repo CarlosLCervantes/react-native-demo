@@ -23,7 +23,7 @@ class AuthService {
 
 			var authInfo = {
 				header: {
-					Authorization: 'Baisc ' + zippedObj[AUTH_KEY]
+					Authorization: 'Basic ' + zippedObj[AUTH_KEY]
 				},
 				user: JSON.parse(zippedObj[USER_KEY])
 			}
