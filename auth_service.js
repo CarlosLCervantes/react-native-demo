@@ -59,7 +59,7 @@ class AuthService {
 			console.log(result);
 			AsyncStorage.multiSet([
 				[AUTH_KEY, encodedAuth],
-				[USER_KEY. JSON.stringify(results)]
+				[USER_KEY, JSON.stringify(result)]
 			], (err)=> {
 				if(err) {
 					throw err;

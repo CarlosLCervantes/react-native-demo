@@ -14,6 +14,7 @@ var {
 } = React;
 
 var Login = require('./login');
+var AppContainer = require('./app_container');
 var AuthService = require('./auth_service');
 
 var GithubBrowser = React.createClass({
@@ -39,9 +40,7 @@ var GithubBrowser = React.createClass({
 
     if(this.state.isLoggedIn) {
       return (
-          <View style={styles.container}>
-            <Text style={styles.welcome}>Logged In</Text>
-          </View>
+          <AppContainer />
         );
     } else {
       return (
